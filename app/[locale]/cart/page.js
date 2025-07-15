@@ -3,21 +3,25 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItemFromCart, clearCart, addItemToCart } from '@/redux/features/cart/cartSlice'; // Adjust path
-import Link from 'next/link';
+import {useTranslations} from 'next-intl';
+import {Link} from '../../../lib/navigation';
 
 export default function CartPage() {
   const cartItems = useSelector((state) => state.cart.items);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const dispatch = useDispatch();
+  const t = useTranslations('cart');
+  const tNav = useTranslations('navigation');
+  const tCommon = useTranslations('common');
 
   if (cartItems.length === 0) {
     return (
       <main style={{ padding: '20px', fontFamily: 'sans-serif', textAlign: 'center' }}>
-        <h1>Your Cart is Empty</h1>
+        <h1>{t('empty')}</h1>
         <p>Start by exploring our delicious restaurants!</p>
         <Link href="/restaurants" style={{ color: 'blue', textDecoration: 'underline', marginTop: '20px', display: 'inline-block' }}>
-          Explore Restaurants
+          {tNav('restaurants')}
         </Link>
       </main>
     );
@@ -25,9 +29,9 @@ export default function CartPage() {
 
   return (
     <main style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>Your Shopping Cart</h1>
+      <h1>{t('title')}</h1>
       <Link href="/" style={{ color: 'blue', textDecoration: 'underline', marginBottom: '20px', display: 'inline-block' }}>
-        &larr; Back to Home
+        &larr; {tNav('home')}
       </Link>
 
       <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -56,7 +60,7 @@ export default function CartPage() {
 
       <div style={{ borderTop: '1px solid #eee', paddingTop: '15px', marginTop: '20px', textAlign: 'right' }}>
         <p style={{ fontSize: '1.2em', fontWeight: 'bold' }}>Total Items: {totalQuantity}</p>
-        <p style={{ fontSize: '1.5em', fontWeight: 'bold' }}>Total Amount: ${totalAmount.toFixed(2)}</p>
+        <p style={{ fontSize: '1.5em', fontWeight: 'bold' }}>{t('total')}: ${totalAmount.toFixed(2)}</p>
         <button
           onClick={() => dispatch(clearCart())}
           style={{ background: '#607D8B', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}
@@ -66,7 +70,7 @@ export default function CartPage() {
         <button
           style={{ background: '#2196F3', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
         >
-          Proceed to Checkout
+          {t('checkout')}
         </button>
       </div>
     </main>

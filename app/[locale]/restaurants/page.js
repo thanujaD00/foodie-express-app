@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import {getTranslations} from 'next-intl/server';
+import {Link} from '../../../lib/navigation';
 
 // Simulate fetching restaurant data at build time (SSG)
 async function getRestaurants() {
@@ -15,12 +16,14 @@ async function getRestaurants() {
 
 export default async function RestaurantsPage() {
   const restaurants = await getRestaurants(); // Data fetching occurs on the server
+  const t = await getTranslations('restaurants');
+  const tNav = await getTranslations('navigation');
 
   return (
     <main style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>Our Restaurants</h1>
+      <h1>{t('title')}</h1>
       <Link href="/" style={{ color: 'blue', textDecoration: 'underline', marginBottom: '20px', display: 'inline-block' }}>
-        &larr; Back to Home
+        &larr; {tNav('home')}
       </Link>
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {restaurants.map((restaurant) => (
@@ -28,7 +31,7 @@ export default async function RestaurantsPage() {
             <Link href={`/restaurants/${restaurant.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <h2>{restaurant.name}</h2>
               <p>Cuisine: {restaurant.cuisine}</p>
-              <p style={{ color: 'blue' }}>View Menu &rarr;</p>
+              <p style={{ color: 'blue' }}>{t('viewMenu')} &rarr;</p>
             </Link>
           </li>
         ))}

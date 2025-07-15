@@ -3,9 +3,11 @@
 
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '@/redux/features/cart/cartSlice'; // Adjust path
+import {useTranslations} from 'next-intl';
 
 export default function AddToCartButton({ dish, restaurantName }) {
   const dispatch = useDispatch();
+  const t = useTranslations('common');
 
   const handleAddToCart = () => {
     dispatch(addItemToCart({
@@ -32,7 +34,7 @@ export default function AddToCartButton({ dish, restaurantName }) {
       }}
       disabled={dish.stock === 'Out of Stock'} // Disable if out of stock
     >
-      {dish.stock === 'Out of Stock' ? 'Out of Stock' : 'Add to Cart'}
+      {dish.stock === 'Out of Stock' ? 'Out of Stock' : t('addToCart')}
     </button>
   );
 }

@@ -1,0 +1,43 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "restaurants": "Restaurants",
+    "cart": "Cart"
+  },
+  "home": {
+    "title": "Welcome to FoodieExpress",
+    "subtitle": "Your favorite food, delivered fast!",
+    "orderNow": "Order Now",
+    "featuredRestaurants": "Featured Restaurants"
+  },
+  "about": {
+    "title": "About FoodieExpress",
+    "description": "We are dedicated to bringing you the best food delivery experience with a wide variety of restaurants and cuisines."
+  },
+  "restaurants": {
+    "title": "Restaurants",
+    "viewMenu": "View Menu",
+    "noRestaurants": "No restaurants available"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "removeItem": "Remove from cart"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "addToCart": "Add to Cart",
+    "quantity": "Quantity",
+    "price": "Price"
+  },
+  "language": {
+    "switchTo": "Switch to",
+    "english": "English",
+    "sinhala": "සිංහල"
+  }
+}
