@@ -1,4 +1,3 @@
-import { Inter } from 'next/font/google';
 import '../globals.css';
 import Image from 'next/image';
 import { Providers } from '../providers';
@@ -10,8 +9,6 @@ import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import {routing} from '../../next-intl.config';
 import {notFound} from 'next/navigation';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'FoodieExpress - Order Food Online',
@@ -34,13 +31,9 @@ export default async function LocaleLayout({ children, params }) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body className={inter.className}>
-        <NextIntlClientProvider messages={messages}>
-          <LocaleContent>{children}</LocaleContent>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      <LocaleContent>{children}</LocaleContent>
+    </NextIntlClientProvider>
   );
 }
 
