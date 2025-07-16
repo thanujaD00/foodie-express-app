@@ -1,6 +1,7 @@
 // app/restaurants/[slug]/page.js
-import Link from 'next/link';
-import AddToCartButton from '@/app/components/AddToCartButton'; // Import AddToCartButton
+import {getTranslations} from 'next-intl/server';
+import {Link} from '../../../../lib/navigation';
+import AddToCartButton from '../../components/AddToCartButton'; // Import AddToCartButton
 
 // Simulate fetching menu data for a specific restaurant (SSR)
 async function getRestaurantMenu(slug) {
@@ -50,7 +51,10 @@ async function getRestaurantMenu(slug) {
 }
 
 export default async function RestaurantMenuPage({ params }) {
-  const restaurant = await getRestaurantMenu(params.slug);
+  const {slug} = await params;
+  const restaurant = await getRestaurantMenu(slug);
+  const t = await getTranslations('restaurants');
+  const tCommon = await getTranslations('common');
 
   if (!restaurant) {
     return (
@@ -58,7 +62,7 @@ export default async function RestaurantMenuPage({ params }) {
         <h1>Restaurant Not Found</h1>
         <p>The restaurant you are looking for does not exist.</p>
         <Link href="/restaurants" style={{ color: 'blue', textDecoration: 'underline', marginTop: '20px', display: 'inline-block' }}>
-          &larr; Back to Restaurants
+          &larr; {t('title')}
         </Link>
       </main>
     );
@@ -69,7 +73,7 @@ export default async function RestaurantMenuPage({ params }) {
       <h1>{restaurant.name} Menu</h1>
       <p>{restaurant.description}</p>
       <Link href="/restaurants" style={{ color: 'blue', textDecoration: 'underline', marginBottom: '20px', display: 'inline-block' }}>
-        &larr; Back to Restaurants
+        &larr; {t('title')}
       </Link>
 
       <h2 style={{ borderBottom: '1px solid #eee', paddingBottom: '10px' }}>Dishes</h2>
