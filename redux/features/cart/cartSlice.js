@@ -1,5 +1,15 @@
 // redux/features/cart/cartSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { clearCartFromIndexedDB } from '../../utils/indexedDB';
+
+// Async thunk to clear cart and IndexedDB
+export const clearCartAndStorage = createAsyncThunk(
+  'cart/clearCartAndStorage',
+  async () => {
+    await clearCartFromIndexedDB();
+    return;
+  }
+);
 
 const initialState = {
   items: [], // Array of { id, name, price, quantity, restaurantName }
@@ -54,9 +64,23 @@ const cartSlice = createSlice({
       state.totalQuantity = 0;
       state.totalAmount = 0;
     },
+    restoreCart: (state, action) => {
+      const { items, totalQuantity, totalAmount } = action.payload;
+      state.items = items || [];
+      state.totalQuantity = totalQuantity || 0;
+      state.totalAmount = totalAmount || 0;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(clearCartAndStorage.fulfilled, (state) => {
+        state.items = [];
+        state.totalQuantity = 0;
+        state.totalAmount = 0;
+      });
   },
 });
 
-export const { addItemToCart, removeItemFromCart, clearCart } = cartSlice.actions;
+export const { addItemToCart, removeItemFromCart, clearCart, restoreCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
