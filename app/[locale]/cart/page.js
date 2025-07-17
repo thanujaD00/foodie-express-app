@@ -2,7 +2,7 @@
 'use client';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItemFromCart, clearCart, addItemToCart } from '@/redux/features/cart/cartSlice'; // Adjust path
+import { removeItemFromCart, clearCartAndStorage, addItemToCart } from '@/redux/features/cart/cartSlice'; // Adjust path
 import {useTranslations} from 'next-intl';
 import {Link} from '../../../lib/navigation';
 
@@ -62,7 +62,7 @@ export default function CartPage() {
         <p style={{ fontSize: '1.2em', fontWeight: 'bold' }}>Total Items: {totalQuantity}</p>
         <p style={{ fontSize: '1.5em', fontWeight: 'bold' }}>{t('total')}: ${totalAmount.toFixed(2)}</p>
         <button
-          onClick={() => dispatch(clearCart())}
+          onClick={() => dispatch(clearCartAndStorage())}
           style={{ background: '#607D8B', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}
         >
           Clear Cart

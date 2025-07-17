@@ -1,55 +1,48 @@
 // redux/store.js
 import { configureStore } from '@reduxjs/toolkit';
-import cartReducer from './features/cart/cartSlice';
+import cartReducer, { restoreCart } from './features/cart/cartSlice';
+import { loadCartFromIndexedDB, saveCartToIndexedDB } from './utils/indexedDB';
 
-// Load cart from localStorage
-const loadCartFromLocalStorage = () => {
-  try {
-    if (typeof window !== 'undefined') {
-      const serializedCart = localStorage.getItem('cart');
-      if (serializedCart === null) {
-        return { items: [], totalQuantity: 0, totalAmount: 0 };
-      }
-      return JSON.parse(serializedCart);
-    }
-  } catch (err) {
-    console.error('Error loading cart from localStorage:', err);
-  }
-  return { items: [], totalQuantity: 0, totalAmount: 0 };
-};
+// Initialize the store with default cart state
+const defaultCartState = { items: [], totalQuantity: 0, totalAmount: 0 };
 
-// Save cart to localStorage
-const saveCartToLocalStorage = (cartState) => {
-  try {
-    if (typeof window !== 'undefined') {
-      const serializedCart = JSON.stringify(cartState);
-      localStorage.setItem('cart', serializedCart);
-    }
-  } catch (err) {
-    console.error('Error saving cart to localStorage:', err);
-  }
-};
-
-// Get initial state with localStorage data
-const preloadedState = {
-  cart: loadCartFromLocalStorage()
-};
-
+// Create store
 export const store = configureStore({
   reducer: {
     cart: cartReducer, // Our cart slice reducer
   },
-  preloadedState,
+  preloadedState: {
+    cart: defaultCartState
+  },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat((store) => (next) => (action) => {
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types for serializable check
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+      },
+    }).concat((store) => (next) => (action) => {
       const result = next(action);
 
-      // Save cart to localStorage after any cart action
+      // Save cart to IndexedDB after any cart action
       if (action.type.startsWith('cart/')) {
         const state = store.getState();
-        saveCartToLocalStorage(state.cart);
+        saveCartToIndexedDB(state.cart).catch(err => {
+          console.error('Failed to save cart to IndexedDB:', err);
+        });
       }
 
       return result;
     }),
 });
+
+// Load cart from IndexedDB and update store when available
+if (typeof window !== 'undefined') {
+  loadCartFromIndexedDB().then(cartData => {
+    if (cartData && (cartData.items.length > 0 || cartData.totalQuantity > 0)) {
+      // Dispatch action to restore cart state
+      store.dispatch(restoreCart(cartData));
+    }
+  }).catch(err => {
+    console.error('Failed to load cart from IndexedDB:', err);
+  });
+}
